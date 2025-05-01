@@ -10,27 +10,27 @@ import FirebaseMessaging
 
 class Authentication {
     
+    static var state: AuthenticationState = .signIn
     let view = AuthenticationView()
     
     public static let shared: Authentication = Authentication()
     
     private init() {
+        self.view.auth = self
         let _ = Auth.auth().addStateDidChangeListener { auth, user in
             if Auth.auth().currentUser != nil {
                 self.view.removeFromSuperview()
                 ViewController.manager.update()
+                Authentication.state = .signedIn
+            }
+            else {
+                Authentication.state = .signIn
             }
         }
-//        do {
-//            try Auth.auth().signOut()
-//        }
-//        catch {
-//            
-//        }
     }
     
-    func signIn(with user: User) {
-        Auth.auth().signIn(withEmail: user.email, password: user.password) { _, error in
+    func signIn(email: String, password: String) {
+        Auth.auth().signIn(withEmail: email, password: password) { _, error in
             if let error = error {
                 print(error)
             }

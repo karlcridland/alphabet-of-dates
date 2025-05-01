@@ -7,132 +7,57 @@
 
 import UIKit
 
-class AuthenticationView: UIView, UITextFieldDelegate {
+class AuthenticationView: UIView {
     
-    let textField: UITextField = UITextField()
+    var auth: Authentication?
     
-    let fields: UIView = UIView()
-    let margin: CGFloat = 10
+    private let fields: AuthenticationFields = AuthenticationFields()
+    private let scroll: UIScrollView = UIScrollView()
+    
+    let submit: AuthenticationSubmitButton = AuthenticationSubmitButton()
+    
+    static let margin: CGFloat = 16
     
     init() {
         super.init(frame: UIScreen.main.bounds)
         self.backgroundColor = .lilac
-        
-        self.fields.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(self.fields)
-        self.addSubview(self.textField)
-        self.textField.isHidden = true
-        self.textField.delegate = self
-        
-        var previous: UIView?
-        
-        for i in 0 ..< 5 {
-            let field = AuthCharButton(i)
-            self.fields.addSubview(field)
-            NSLayoutConstraint.activate([
-                field.leftAnchor.constraint(equalTo: previous?.rightAnchor ?? fields.leftAnchor, constant: self.margin),
-                field.topAnchor.constraint(equalTo: fields.topAnchor),
-                fields.bottomAnchor.constraint(equalTo: field.bottomAnchor)
-            ])
-            previous = field
-            field.addTarget(self, action: #selector(self.buttonClicked), for: .touchUpInside)
+        self.fields.all.forEach { field in
+            self.scroll.addSubview(field)
         }
-        
-        if let previous = previous {
-            NSLayoutConstraint.activate([
-                self.fields.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-                self.fields.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: -UIScreen.main.bounds.height / 4),
-                self.fields.rightAnchor.constraint(equalTo: previous.rightAnchor, constant: self.margin)
-            ])
-        }
-        
+        self.addSubview(self.scroll)
+        self.addSubview(self.submit)
+        self.safeAreaInsetsDidChange()
+        self.submit.addTarget(self, action: #selector(self.clicked), for: .touchUpInside)
     }
     
-    @objc func buttonClicked(_ sender: AuthCharButton) {
-        if (!self.textField.isFirstResponder) {
-            self.textField.becomeFirstResponder()
-        }
-        self.update()
-    }
-    
-    func textFieldDidChangeSelection(_ textField: UITextField) {
-        textField.text = textField.text?.prefix(5).lowercased()
-        let f = all_fields
-        self.resetFields()
-        textField.text?.map({$0.lowercased()}).enumerated().forEach({ (i, char) in
-            if let first = f.first(where: {$0.position == i}) {
-                first.setTitle(char, for: .normal)
-            }
-        })
-        if let user = Users(rawValue: textField.text ?? "")?.user {
-            Authentication.shared.signIn(with: user)
-        }
-        self.update()
-    }
-    
-    func update() {
-        let position = self.textField.cursorPosition()
-        all_fields.forEach { button in
-            button.setActive(self.textField.isFirstResponder && button.position == position)
+    @objc func clicked() {
+        switch (Authentication.state) {
+        case .signIn:
+            self.auth?.signIn(email: fields.email.value, password: fields.password.value)
+            return
+        case .signUp:
+            return
+        case .forgotPassword:
+            return
+        case .signedIn:
+            return
         }
     }
     
-    var all_fields: [AuthCharButton] {
-        var results: [AuthCharButton] = []
-        self.fields.subviews.forEach { view in
-            if let button = view as? AuthCharButton {
-                results.append(button)
-            }
-        }
-        return results.sorted(by: {$0.position < $1.position})
-    }
-    
-    func resetFields() {
-        self.all_fields.forEach { $0.setTitle(nil, for: .normal) }
+    override func safeAreaInsetsDidChange() {
+        super.safeAreaInsetsDidChange()
+        self.scroll.frame = CGRect(x: 0, y: self.safeAreaInsets.top, width: self.frame.width, height: self.frame.height - self.safeAreaInsets.top - self.safeAreaInsets.bottom - 100)
+        self.submit.frame = CGRect(x: 0, y: self.scroll.frame.maxY + 18, width: AuthenticationView.elementWidth, height: 60)
+        self.submit.center.x = UIScreen.main.bounds.midX
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-}
-
-class AuthCharButton: UIButton {
-    
-    let position: Int
-    
-    init(_ position: Int) {
-        self.position = position
-        super.init(frame: .zero)
-        self.translatesAutoresizingMaskIntoConstraints = false
-        self.layer.cornerRadius = 12
-        self.layer.cornerCurve = .continuous
-        self.titleLabel?.font = .systemFont(ofSize: 22, weight: .bold)
-        self.setActive(false)
-        self.setTitleColor(.black, for: .normal)
-        
-        NSLayoutConstraint.activate([
-            self.widthAnchor.constraint(equalToConstant: 50),
-            self.heightAnchor.constraint(equalToConstant: 64),
-        ])
-        
-    }
-    
-    func setActive(_ isActive: Bool) {
-        self.backgroundColor = isActive ? .charcoal : .frostedWhite
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-}
-
-extension UITextField {
-    
-    func cursorPosition() -> Int {
-        guard let selectedRange = self.selectedTextRange else { return 0 }
-        return self.offset(from: self.beginningOfDocument, to: selectedRange.start)
+    static var elementWidth: CGFloat {
+        let minWidth: CGFloat = UIScreen.main.bounds.width - (AuthenticationView.margin * 4)
+        return [minWidth, 420].min()!
     }
     
 }
