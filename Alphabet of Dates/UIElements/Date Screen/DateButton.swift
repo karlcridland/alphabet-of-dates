@@ -11,7 +11,7 @@ class DateButton: UIButton {
     
     static let margin: CGFloat = 16
     
-    var dateSetterButton: DateSetterHeaderButton?
+    var activitySetterButton: ActivitySetterHeaderButton?
     
     let letterLabel = UILabel()
     let descriptionLabel = UILabel()
@@ -110,7 +110,7 @@ class DateButton: UIButton {
                     self.alpha = 0.55
                 }
             }
-            self.dateSetterButton?.update(from: data)
+            self.activitySetterButton?.update(from: data)
             UserDefaults.standard.set(self.descriptionLabel.text, forKey: self.storageKey)
         }
     }

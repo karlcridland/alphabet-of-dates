@@ -42,9 +42,9 @@ class DateButtonScrollView: UIScrollView {
     
     @objc func fullScreen(_ sender: ImageButton) {
         if let viewController = DateButtonManager.viewController {
-            viewController.fullScreen.isHidden = false
-            viewController.fullScreen.setImage(sender.image(for: .normal), for: .normal)
-            viewController.fullScreen.trash.target = sender
+//            viewController.fullScreen.isHidden = false
+//            viewController.fullScreen.setImage(sender.image(for: .normal), for: .normal)
+//            viewController.fullScreen.trash.target = sender
         }
     }
     

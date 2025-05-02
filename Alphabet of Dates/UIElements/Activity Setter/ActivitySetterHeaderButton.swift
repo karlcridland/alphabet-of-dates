@@ -1,5 +1,5 @@
 //
-//  DateSetterHeaderButton.swift
+//  ActivitySetterHeaderButton.swift
 //  Alphabet of Dates
 //
 //  Created by Karl Cridland on 28/02/2025.
@@ -7,10 +7,10 @@
 
 import UIKit
 
-class DateSetterHeaderButton: UIButton {
+class ActivitySetterHeaderButton: UIButton {
     
     var data: DateData?
-    var dateSetter: DateSetter?
+    var activitySetter: ActivitySetter?
     let char: String
     
     let width: CGFloat = 60
@@ -46,17 +46,17 @@ class DateSetterHeaderButton: UIButton {
         }
         
         if let button = ViewController.manager.buttons.first(where: {$0.character == self.char}) {
-            button.dateSetterButton = self
+            button.activitySetterButton = self
         }
         self.addTarget(self, action: #selector(self.click), for: .touchUpInside)
     }
     
-    @objc func click(sender: DateSetterHeaderButton) {
-        self.dateSetter?.view.activity.textField.text = ""
-        self.dateSetter?.view.day.textField.text = ""
-        self.dateSetter?.view.month.textField.text = ""
-        self.dateSetter?.view.year.textField.text = ""
-        DateSetter.buttons.values.forEach { button in
+    @objc func click(sender: ActivitySetterHeaderButton) {
+        self.activitySetter?.view.activity.textField.text = ""
+        self.activitySetter?.view.day.textField.text = ""
+        self.activitySetter?.view.month.textField.text = ""
+        self.activitySetter?.view.year.textField.text = ""
+        ActivitySetter.buttons.values.forEach { button in
             let selected: Bool = button == sender
             let tintColor: UIColor = selected ? .frostedWhite : .charcoal
             button.label.textColor = tintColor
@@ -64,7 +64,7 @@ class DateSetterHeaderButton: UIButton {
             button.dateCheck.tintColor = tintColor
             button.backgroundColor = selected ? .charcoal : .frostedWhite
         }
-        self.dateSetter?.current = self.char
+        self.activitySetter?.current = self.char
         self.update(from: self.data)
     }
     
@@ -86,7 +86,7 @@ class DateSetterHeaderButton: UIButton {
     }
     
     func updateText() {
-        if let setter = self.dateSetter,
+        if let setter = self.activitySetter,
             setter.current == self.char {
             if (setter.view.activity.textField.text != data?.name) {
                 setter.view.activity.textField.text = data?.name

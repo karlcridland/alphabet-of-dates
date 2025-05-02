@@ -7,4 +7,10 @@
 
 class Navigation {
     
+    let view: NavigationView = NavigationView()
+    
+    init() {
+        
+    }
+    
 }

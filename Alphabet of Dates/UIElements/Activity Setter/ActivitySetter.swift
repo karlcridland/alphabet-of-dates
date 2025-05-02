@@ -1,5 +1,5 @@
 //
-//  DateSetter.swift
+//  ActivitySetter.swift
 //  Alphabet of Dates
 //
 //  Created by Karl Cridland on 28/02/2025.
@@ -7,27 +7,27 @@
 
 import UIKit
 
-class DateSetter {
+class ActivitySetter {
     
-    let view = DateSetterView()
+    let view = ActivitySetterView()
     let settingsButton: SettingsButton = SettingsButton()
     
-    static var buttons: [String: DateSetterHeaderButton] = [:]
+    static var buttons: [String: ActivitySetterHeaderButton] = [:]
     
     var current: String = "A"
     
     init() {
-        view.dateSetter = self
-        settingsButton.dateSetter = self
+        view.ActivitySetter = self
+        settingsButton.activitySetter = self
         
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ12".forEach { character in
-            let button = DateSetterHeaderButton(String(character))
-            button.dateSetter = self
+            let button = ActivitySetterHeaderButton(String(character))
+            button.activitySetter = self
             self.view.scroll.addSubview(button)
             self.view.scroll.contentSize.width = button.frame.maxX + button.margin
-            DateSetter.buttons[String(character)] = button
+            ActivitySetter.buttons[String(character)] = button
         }
-        if let a = DateSetter.buttons["A"] {
+        if let a = ActivitySetter.buttons["A"] {
             a.click(sender: a)
         }
         self.view.save.addTarget(self, action: #selector(self.save), for: .touchUpInside)

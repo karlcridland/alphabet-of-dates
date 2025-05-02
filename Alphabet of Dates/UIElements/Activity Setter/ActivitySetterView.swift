@@ -1,5 +1,5 @@
 //
-//  DateSetterView.swift
+//  ActivitySetterView.swift
 //  Alphabet of Dates
 //
 //  Created by Karl Cridland on 28/02/2025.
@@ -7,19 +7,19 @@
 
 import UIKit
 
-class DateSetterView: UIButton {
+class ActivitySetterView: UIButton {
     
-    var dateSetter: DateSetter?
+    var ActivitySetter: ActivitySetter?
     let scroll: UIScrollView = UIScrollView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 120))
     
-    let activity: DateSetterInputView = DateSetterInputView(frame: CGRect(x: 10, y: 0, width: UIScreen.main.bounds.width - 90, height: 60), placeholder: "Activity")
-    let day: DateSetterInputView = DateSetterInputView(frame: CGRect(x: 10, y: 0, width: 0, height: 60), placeholder: "DD")
-    let month: DateSetterInputView = DateSetterInputView(frame: CGRect(x: 10, y: 0, width: 0, height: 60), placeholder: "MM")
-    let year: DateSetterInputView = DateSetterInputView(frame: CGRect(x: 10, y: 0, width: 0, height: 60), placeholder: "YYYY")
+    let activity: ActivitySetterInputView = ActivitySetterInputView(frame: CGRect(x: 10, y: 0, width: UIScreen.main.bounds.width - 90, height: 60), placeholder: "Activity")
+    let day: ActivitySetterInputView = ActivitySetterInputView(frame: CGRect(x: 10, y: 0, width: 0, height: 60), placeholder: "DD")
+    let month: ActivitySetterInputView = ActivitySetterInputView(frame: CGRect(x: 10, y: 0, width: 0, height: 60), placeholder: "MM")
+    let year: ActivitySetterInputView = ActivitySetterInputView(frame: CGRect(x: 10, y: 0, width: 0, height: 60), placeholder: "YYYY")
     let save: UIButton = UIButton(frame: CGRect(x: 0, y: 0, width: 140, height: 60))
     
-    let activityClear: DateSetterClearButton = DateSetterClearButton()
-    let dateClear: DateSetterClearButton = DateSetterClearButton()
+    let activityClear: ActivitySetterClearButton = ActivitySetterClearButton()
+    let dateClear: ActivitySetterClearButton = ActivitySetterClearButton()
     
     init() {
         super.init(frame: UIScreen.main.bounds)
@@ -87,7 +87,7 @@ class DateSetterView: UIButton {
     
 }
 
-class DateSetterInputView: UIButton {
+class ActivitySetterInputView: UIButton {
     
     let textField: UITextField
     
@@ -120,9 +120,9 @@ class DateSetterInputView: UIButton {
     
 }
 
-class DateSetterClearButton: UIButton {
+class ActivitySetterClearButton: UIButton {
     
-    var targets: [DateSetterInputView] = []
+    var targets: [ActivitySetterInputView] = []
     
     init() {
         super.init(frame: CGRect(origin: .zero, size: CGSize(width: 60, height: 60)))
