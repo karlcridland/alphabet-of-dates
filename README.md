@@ -1,4 +1,4 @@
-# H1 Alphabet of Dates
+# Alphabet of Dates
 
 Originally an app I'd made for my girlfriend in the week before her birthday. 
 I'm now in the process of cleaning up the code and introducing a more readable architecture.
