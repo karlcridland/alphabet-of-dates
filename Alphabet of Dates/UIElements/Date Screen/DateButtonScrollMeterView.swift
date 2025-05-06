@@ -24,12 +24,14 @@ class DateButtonScrollMeterView: UIView {
         self.alpha = 0
     }
     
-    func update(with images: [String] = []) {
+    func update(with data: [String: [String: String]] = [:]) {
         self.removeAll()
         var previous: DateButtonScrollMeterIcon = self.place(icon: self.cameraIcon, nextTo: nil)
-        images.forEach { id in
-            let icon = DateButtonScrollMeterIcon(.image)
-            previous = self.place(icon: icon, nextTo: previous)
+        data.forEach { (id, images) in
+            images.keys.forEach { image in
+                let icon = DateButtonScrollMeterIcon(.image)
+                previous = self.place(icon: icon, nextTo: previous)
+            }
         }
         self.finalAnchor = self.rightAnchor.constraint(equalTo: previous.rightAnchor, constant: DateButtonScrollMeterIcon.margin)
         if let finalAnchor = self.finalAnchor {

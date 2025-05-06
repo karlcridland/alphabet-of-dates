@@ -28,8 +28,15 @@ class DateButtonScrollView: UIScrollView {
         self.addSubview(upload)
         
         self.contentSize.width = self.frame.width
-        
-        data.images.enumerated().forEach { (i, id) in
+        var images = data.images.sortImages
+        if let first = data.firstImage {
+            images.sort {
+                if $0 == first { return true }
+                if $1 == first { return false }
+                return false
+            }
+        }
+        images.enumerated().forEach { (i, id) in
             let x = size.width * CGFloat(1 + i)
             let picture = ImageButton(frame: CGRect(origin: CGPoint(x: x, y: 0), size: size), data: data, image_id: id)
             picture.clipsToBounds = true
@@ -42,9 +49,9 @@ class DateButtonScrollView: UIScrollView {
     
     @objc func fullScreen(_ sender: ImageButton) {
         if let viewController = DateButtonManager.viewController {
-//            viewController.fullScreen.isHidden = false
-//            viewController.fullScreen.setImage(sender.image(for: .normal), for: .normal)
-//            viewController.fullScreen.trash.target = sender
+            viewController.fullScreen.isHidden = false
+            viewController.fullScreen.setImage(sender.image(for: .normal), for: .normal)
+            viewController.fullScreen.trash.target = sender
         }
     }
     
@@ -55,6 +62,8 @@ class DateButtonScrollView: UIScrollView {
 }
 
 class ImageButton: UIButton {
+    
+    static var images: [String: UIImage] = [:]
     
     let data: DateData
     let image_id: String
@@ -71,6 +80,10 @@ class ImageButton: UIButton {
     }
     
     func setImageFromFirebase(path: String) {
+        if let image = ImageButton.images[path] {
+            self.setImage(image, for: .normal)
+            return
+        }
         let storageRef = Storage.storage().reference().child(path)
 
         storageRef.downloadURL { url, error in
@@ -83,6 +96,7 @@ class ImageButton: UIButton {
                     return
                 }
                 DispatchQueue.main.async {
+                    ImageButton.images[path] = image
                     self.setImage(image, for: .normal)
                 }
             }.resume()
@@ -91,6 +105,21 @@ class ImageButton: UIButton {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+}
+
+extension [String: [String: String]] {
+    
+    var sortImages: [String] {
+        var imageTimestampPairs: [(imageID: String, timestamp: String)] = []
+        self.values.forEach { images in
+            images.forEach { (imageID, timestamp) in
+                imageTimestampPairs.append((imageID, timestamp))
+            }
+        }
+        let sortedImageIDs = imageTimestampPairs.sorted { $0.timestamp < $1.timestamp }.map { $0.imageID }
+        return sortedImageIDs
     }
     
 }

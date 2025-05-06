@@ -41,10 +41,6 @@ class DatabaseManager {
     }
     
     func setActivity(char: String, id: String, name: String?, date: String?) {
-        print([
-            "name": name,
-            "date": date
-        ])
         self.ref.child("dates/\(id)/alphabet/\(char.uppercased())").setValue([
             "name": name,
             "date": date
@@ -58,19 +54,15 @@ class DatabaseManager {
     }
     
     func appendImage(id: String, char: String, image_id: String) {
-        self.ref.child("dates/\(id)/alphabet/\(char)/images").observeSingleEvent(of: .value) { snapshot in
-            var images = snapshot.value as? [String] ?? []
-            images.append(image_id)
-            self.ref.child("dates/\(id)/alphabet/\(char)/images").setValue(images)
+        if let uid = Auth.auth().currentUser?.uid {
+            self.ref.child("dates/\(id)/alphabet/\(char)/images/\(uid)/\(image_id)").setValue(getCurrentTimestamp())
         }
     }
     
     func remove(image button: ImageButton) {
-        let path = "dates/\(button.data.id)/alphabet/\(button.data.character)/images"
-        self.ref.child(path).observeSingleEvent(of: .value) { snapshot in
-            let images = (snapshot.value as? [String] ?? []).filter({$0 != button.image_id})
-            print(images)
-            self.ref.child(path).setValue(images)
+        if let uid = Auth.auth().currentUser?.uid {
+            let path = "dates/\(button.data.id)/alphabet/\(button.data.character)/images/\(uid)/\(button.image_id)"
+            self.ref.child(path).removeValue()
         }
     }
     
@@ -81,14 +73,16 @@ class DateData {
     let character: String
     let name: String
     let revealedOn: String
-    var images: [String]
+    var images: [String: [String: String]]
+    var firstImage: String?
     let id: String
     
     init(character: String, _ data: [String: Any], id: String) {
         self.character = character
         self.name = data["name"] as? String ?? ""
         self.revealedOn = data["date"] as? String ?? ""
-        self.images = data["images"] as? [String] ?? []
+        self.images = data["images"] as? [String: [String: String]] ?? [:]
+        self.firstImage = data["favourite"] as? String
         self.id = id
     }
     
@@ -117,4 +111,11 @@ class DateData {
         return revealedOn != ""
     }
     
+}
+
+func getCurrentTimestamp() -> String {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy:MM:dd:HH:mm:ss"
+    let currentDate = Date()
+    return dateFormatter.string(from: currentDate)
 }
