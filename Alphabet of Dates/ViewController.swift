@@ -46,14 +46,17 @@ class ViewController: ImageViewController {
 
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
+        self.dateSetter.settingsButton.frame.origin = CGPoint(x: 10, y: self.view.frame.height - self.view.safeAreaInsets.bottom - self.dateSetter.settingsButton.frame.height - 10)
+        self.dateSetter.view.setLayout()
+        self.navigation.view.frame.size.height = self.view.safeAreaInsets.top + self.navigation.view.height
+        
         NSLayoutConstraint.activate([
-            ViewController.manager.scroll.topAnchor.constraint(equalTo: self.view.topAnchor, constant: self.view.safeAreaInsets.top),
+            ViewController.manager.scroll.topAnchor.constraint(equalTo: self.navigation.view.bottomAnchor),
             ViewController.manager.scroll.leftAnchor.constraint(equalTo: self.view.leftAnchor),
             ViewController.manager.scroll.rightAnchor.constraint(equalTo: self.view.rightAnchor),
             ViewController.manager.scroll.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -self.view.safeAreaInsets.bottom),
         ])
-        self.dateSetter.settingsButton.frame.origin = CGPoint(x: 10, y: self.view.frame.height - self.view.safeAreaInsets.bottom - self.dateSetter.settingsButton.frame.height - 10)
-        self.dateSetter.view.setLayout()
+        
     }
 
 }
