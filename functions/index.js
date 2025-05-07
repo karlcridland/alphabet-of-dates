@@ -32,6 +32,24 @@ exports.onDateCreated = onValueCreated(
     }
 );
 
+exports.onImageUploaded = onValueCreated(
+    { ref: "/dates/{date_id}/alphabet/{character}/images/{user_id}/{image_id}", region: "europe-west1" },
+    async (event) => {
+        let p = event.params;
+        const name = await admin.database().ref(`/users/${p.user_id}/name/first`).get();
+        console.log(name.val());
+        let users = await getDateUsers(p.date_id);
+        if (!users || users.length === 0) return;
+
+        await Promise.all(users.map(async (uid) => {
+            const fcmToken = await getFcmToken(uid);
+            if (fcmToken) {
+                await sendNotification(fcmToken, `${name.val()} just uploaded a photo! 📸`, 'Go check out the photo they took!');
+            }
+        }));
+    }
+);
+
 const funPhrase = (letter) => {
     switch (letter.toUpperCase()) {
         case 'D':
