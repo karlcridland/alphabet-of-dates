@@ -19,14 +19,8 @@ class ViewController: ImageViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.addSubview(ViewController.manager.scroll)
-        self.view.sendSubviewToBack(ViewController.manager.scroll)
         DateButtonManager.viewController = self
-        if (self.masterUser) {
-            self.view.addSubview(self.dateSetter.view)
-            self.view.addSubview(self.dateSetter.settingsButton)
-        }
-        [self.auth.view, self.navigation.view, self.fullScreen].forEach { view in
+        [self.navigation.master, self.navigation.view, self.fullScreen, self.auth.view].forEach { view in
             self.view.addSubview(view)
         }
         
@@ -46,15 +40,15 @@ class ViewController: ImageViewController {
 
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
-        self.dateSetter.settingsButton.frame.origin = CGPoint(x: 10, y: self.view.frame.height - self.view.safeAreaInsets.bottom - self.dateSetter.settingsButton.frame.height - 10)
-        self.dateSetter.view.setLayout()
+//        self.dateSetter.settingsButton.frame.origin = CGPoint(x: 10, y: self.view.frame.height - self.view.safeAreaInsets.bottom - self.dateSetter.settingsButton.frame.height - 10)
+//        self.dateSetter.view.setLayout()
         self.navigation.view.frame.size.height = self.view.safeAreaInsets.top + self.navigation.view.height
         
         NSLayoutConstraint.activate([
-            ViewController.manager.scroll.topAnchor.constraint(equalTo: self.navigation.view.bottomAnchor),
-            ViewController.manager.scroll.leftAnchor.constraint(equalTo: self.view.leftAnchor),
-            ViewController.manager.scroll.rightAnchor.constraint(equalTo: self.view.rightAnchor),
-            ViewController.manager.scroll.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -self.view.safeAreaInsets.bottom),
+            self.navigation.master.topAnchor.constraint(equalTo: self.navigation.view.bottomAnchor),
+            self.navigation.master.leftAnchor.constraint(equalTo: self.view.leftAnchor),
+            self.navigation.master.rightAnchor.constraint(equalTo: self.view.rightAnchor),
+            self.navigation.master.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -self.view.safeAreaInsets.bottom),
         ])
         
     }

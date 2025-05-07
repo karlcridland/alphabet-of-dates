@@ -40,4 +40,8 @@ extension String {
         }
     }
     
+    static var alphabet: [String] {
+        return "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(separator: "").map({$0.uppercased()})
+    }
+    
 }

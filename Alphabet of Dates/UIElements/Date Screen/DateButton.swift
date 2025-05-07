@@ -13,6 +13,8 @@ class DateButton: UIButton {
     
     var activitySetterButton: ActivitySetterHeaderButton?
     
+    var data: DateData?
+    
     let letterLabel = UILabel()
     let descriptionLabel = UILabel()
     let dateLabel = UILabel()
