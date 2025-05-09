@@ -14,14 +14,21 @@ class ActivityScrollView: UIScrollView {
         super.init(frame: CGRect(origin: .zero, size: size))
         self.isPagingEnabled = true
         self.showsHorizontalScrollIndicator = false
+        self.layer.cornerCurve = .continuous
     }
     
     func set(_ activity: Activity) {
         activity.getImages { images in
             self.removeAllSubiews()
+            let home = ActivityHomeButton(size: self.frame.size)
+            home.activity = activity
+            self.addSubview(home)
             images.enumerated().forEach { (i, image) in
-                let imageView = ActivityImageButton(position: i + 1, size: self.frame.size, image: image)
-                self.addSubview(imageView)
+                if let id = activity.getImageRef(image) {
+                    let imageView = ActivityImageButton(position: i + 1, size: self.frame.size, id: id, image: image)
+                    imageView.activity = activity
+                    self.addSubview(imageView)
+                }
             }
             self.contentSize.width = self.frame.size.width * CGFloat(images.count + 1)
         }

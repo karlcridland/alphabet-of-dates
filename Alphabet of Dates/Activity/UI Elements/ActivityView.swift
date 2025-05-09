@@ -17,6 +17,7 @@ class ActivityView: UIView {
     let margin: CGFloat = 12
     let label: UILabel = UILabel()
     let scroll: ActivityScrollView
+    let optionButton: ActivityOptionsButton
     
     var buttons: [ActivityButton] = []
     
@@ -25,20 +26,30 @@ class ActivityView: UIView {
         let height: CGFloat = width * 1.15
         let x: CGFloat = CGFloat(position % 2) * (width + self.margin) + self.margin
         let y: CGFloat = CGFloat(position / 2) * (height + self.margin) + self.margin
-        self.scroll = ActivityScrollView(size: CGSize(width: width, height: height))
+        let size = CGSize(width: width, height: height)
+        self.scroll = ActivityScrollView(size: size)
+        self.optionButton = ActivityOptionsButton(size: size)
         super.init(frame: CGRect(x: x, y: y, width: width, height: height))
         
-        self.backgroundColor = .frostedWhite
-        [self.label, self.scroll].forEach { view in
+        [self.label, self.scroll, self.optionButton].forEach { view in
             self.addSubview(view)
             view.frame = CGRect(origin: .zero, size: CGSize(width: width, height: height))
         }
-        
         self.label.frame.size.height = width
+        self.style()
+    }
+    
+    func style() {
+        self.backgroundColor = .frostedWhite
+        [self, self.scroll, self.optionButton].forEach { view in
+            view.layer.cornerRadius = 24
+            view.layer.cornerCurve = .continuous
+        }
     }
     
     func set(_ activity: Activity) {
         self.scroll.set(activity)
+        self.optionButton.set(activity)
         self.label.text = activity.character
         self.label.textAlignment = .center
         self.label.font = UIFont(name: "PlayfairDisplay-Black", size: 90)

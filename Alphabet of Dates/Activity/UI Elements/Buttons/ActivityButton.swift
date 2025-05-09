@@ -13,13 +13,16 @@ import UIKit
 class ActivityButton: UIButton {
     
     let position: Int
+    var activity: Activity?
 
     init(position: Int, size: CGSize) {
         self.position = position
-        super.init(frame: CGRect(
-            origin: CGPoint(x: size.width * CGFloat(position), y: 0),
-            size: size
-        ))
+        super.init(frame: CGRect(origin: CGPoint(x: size.width * CGFloat(position), y: 0), size: size))
+        self.addTarget(self, action: #selector(self.tapped), for: .touchUpInside)
+    }
+    
+    @objc func tapped() {
+        self.activity?.view.optionButton.appear()
     }
     
     required init?(coder: NSCoder) {

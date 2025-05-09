@@ -10,8 +10,10 @@ import UIKit
 class ActivityImageButton: ActivityButton {
     
     let picture: UIImageView = UIImageView()
+    let id: String
     
-    init(position: Int, size: CGSize, image: UIImage) {
+    init(position: Int, size: CGSize, id: String, image: UIImage) {
+        self.id = id
         super.init(position: position, size: size)
         self.picture.frame.size = size
         self.picture.image = image
@@ -19,6 +21,14 @@ class ActivityImageButton: ActivityButton {
         self.picture.contentMode = .scaleAspectFill
         self.clipsToBounds = true
         self.addSubview(picture)
+    }
+    
+    override func tapped() {
+        if let optionButton = self.activity?.view.optionButton {
+            optionButton.selected_image = self.id
+            optionButton.enableAll()
+            super.tapped()
+        }
     }
     
     required init?(coder: NSCoder) {

@@ -39,6 +39,13 @@ class Activity {
         onComplete(self.images_sorted)
     }
     
+    func getImageRef(_ image: UIImage) -> String? {
+        if let first = self.saved_images.first(where: {$0.value == image}) {
+            return first.key
+        }
+        return nil
+    }
+    
     private var images_sorted: [UIImage] {
         var results: [UIImage] = []
         self.data.images.sortImages(self.data.firstImage).forEach { ref in
@@ -50,7 +57,15 @@ class Activity {
     }
     
     @objc func uploadPhotoClicked() {
-        
+    }
+    
+    @objc func fullscreenClicked() {
+    }
+    
+    @objc func removeImageClicked() {
+    }
+    
+    @objc func favouriteImageClicked() {
     }
     
 }
