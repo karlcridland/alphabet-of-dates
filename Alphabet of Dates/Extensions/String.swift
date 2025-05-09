@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseStorage
 
 extension String {
     
@@ -42,6 +43,24 @@ extension String {
     
     static var alphabet: [String] {
         return "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(separator: "").map({$0.uppercased()})
+    }
+    
+    func downloadImage(id: String, character: String, _ onComplete: @escaping (UIImage) -> Void) {
+        let path = "dates/\(id)/\(character)/\(self)"
+        let storageRef = Storage.storage().reference().child(path)
+        storageRef.downloadURL { url, error in
+            guard let url = url, error == nil else {
+                return
+            }
+            URLSession.shared.dataTask(with: url) { data, response, error in
+                guard let data = data, error == nil, let image = UIImage(data: data) else {
+                    return
+                }
+                DispatchQueue.main.async {
+                    onComplete(image)
+                }
+            }.resume()
+        }
     }
     
 }

@@ -28,14 +28,7 @@ class DateButtonScrollView: UIScrollView {
         self.addSubview(upload)
         
         self.contentSize.width = self.frame.width
-        var images = data.images.sortImages
-        if let first = data.firstImage {
-            images.sort {
-                if $0 == first { return true }
-                if $1 == first { return false }
-                return false
-            }
-        }
+        var images = data.images.sortImages(data.firstImage)
         images.enumerated().forEach { (i, id) in
             let x = size.width * CGFloat(1 + i)
             let picture = ImageButton(frame: CGRect(origin: CGPoint(x: x, y: 0), size: size), data: data, image_id: id)
@@ -63,14 +56,21 @@ class DateButtonScrollView: UIScrollView {
 
 extension [String: [String: String]] {
     
-    var sortImages: [String] {
+    func sortImages(_ favourite: String? = nil) -> [String] {
         var imageTimestampPairs: [(imageID: String, timestamp: String)] = []
         self.values.forEach { images in
             images.forEach { (imageID, timestamp) in
                 imageTimestampPairs.append((imageID, timestamp))
             }
         }
-        let sortedImageIDs = imageTimestampPairs.sorted { $0.timestamp < $1.timestamp }.map { $0.imageID }
+        var sortedImageIDs = imageTimestampPairs.sorted { $0.timestamp < $1.timestamp }.map { $0.imageID }
+        if let first = favourite {
+            sortedImageIDs.sort {
+                if $0 == first { return true }
+                if $1 == first { return false }
+                return false
+            }
+        }
         return sortedImageIDs
     }
     

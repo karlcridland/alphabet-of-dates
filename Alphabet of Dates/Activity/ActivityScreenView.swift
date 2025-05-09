@@ -9,18 +9,17 @@ import UIKit
 
 // This is the main screen view, it shows all activities/dates to a user.
 
-
 class ActivityScreenView: ScreenView {
     
     var buttons: [DateButton] = []
     
-    init() {
-        super.init(frame: .zero)
+    override init() {
+        super.init()
     }
     
-    override func display(_ manager: ActivityManager) {
+    override func display() {
         String.alphabet.forEach { char in
-            if let activity = manager.all.first(where: {$0.key == char})?.value {
+            if let activity = ActivityManager.all.first(where: {$0.key == char})?.value {
                 self.addSubview(activity.view)
                 self.contentSize.height = activity.view.frame.maxY + activity.view.margin
             }

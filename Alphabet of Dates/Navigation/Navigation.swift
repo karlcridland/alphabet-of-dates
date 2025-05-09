@@ -10,16 +10,15 @@ import UIKit
 class Navigation {
     
     let view: NavigationView = NavigationView()
-    let manager: ActivityManager = ActivityManager()
     let master: MasterView = MasterView()
     let screens: NavigationScreens = NavigationScreens()
     
     init() {
         DatabaseManager.shared.getID { id in
-            self.manager.getActivities(id) {
+            ActivityManager.getActivities(id) {
                 self.screens.all.forEach { view in
                     self.master.addSubview(view)
-                    view.display(self.manager)
+                    view.display()
                 }
             }
         }
@@ -46,15 +45,25 @@ class ScreenView: UIScrollView {
     
     var id: String?
     
-    func display(_ manager: ActivityManager) {
+    init() {
+        super.init(frame: .zero)
+        self.showsVerticalScrollIndicator = false
+        self.showsHorizontalScrollIndicator = false
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func display() {
     }
     
 }
 
 class EditActivityScreenView: ScreenView {
     
-    init() {
-        super.init(frame: .zero)
+    override init() {
+        super.init()
     }
     
     required init?(coder: NSCoder) {

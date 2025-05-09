@@ -12,18 +12,36 @@ import UIKit
 // favourite item.
 
 
-class ActivityView: UIButton {
+class ActivityView: UIView {
     
     let margin: CGFloat = 12
+    let label: UILabel = UILabel()
+    let scroll: ActivityScrollView
+    
+    var buttons: [ActivityButton] = []
     
     init(_ position: Int) {
         let width: CGFloat = (UIScreen.main.bounds.width - (3 * self.margin)) / 2
-        let height: CGFloat = width * 1.2
+        let height: CGFloat = width * 1.15
         let x: CGFloat = CGFloat(position % 2) * (width + self.margin) + self.margin
         let y: CGFloat = CGFloat(position / 2) * (height + self.margin) + self.margin
+        self.scroll = ActivityScrollView(size: CGSize(width: width, height: height))
         super.init(frame: CGRect(x: x, y: y, width: width, height: height))
         
-        self.backgroundColor = .sageGreen
+        self.backgroundColor = .frostedWhite
+        [self.label, self.scroll].forEach { view in
+            self.addSubview(view)
+            view.frame = CGRect(origin: .zero, size: CGSize(width: width, height: height))
+        }
+        
+        self.label.frame.size.height = width
+    }
+    
+    func set(_ activity: Activity) {
+        self.scroll.set(activity)
+        self.label.text = activity.character
+        self.label.textAlignment = .center
+        self.label.font = UIFont(name: "PlayfairDisplay-Black", size: 90)
     }
     
     required init?(coder: NSCoder) {
