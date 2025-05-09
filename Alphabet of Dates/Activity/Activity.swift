@@ -15,6 +15,7 @@ class Activity {
     
     let view: ActivityView
     let id, character: String
+    let canReveal: Bool
     
     private var saved_images: [String: UIImage] = [:]
     
@@ -22,6 +23,7 @@ class Activity {
         self.data = data
         self.id = data.id
         self.character = data.character
+        self.canReveal = data.canReveal
         let position: Int = String.alphabet.firstIndex(of: data.character) ?? 0
         self.view = ActivityView(position)
         self.view.set(self)

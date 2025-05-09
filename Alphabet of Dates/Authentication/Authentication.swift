@@ -20,7 +20,7 @@ class Authentication {
         let _ = Auth.auth().addStateDidChangeListener { auth, user in
             if Auth.auth().currentUser != nil {
                 self.view.removeFromSuperview()
-                ViewController.manager.update()
+//                ViewController.manager.update()
                 Authentication.state = .signedIn
             }
             else {

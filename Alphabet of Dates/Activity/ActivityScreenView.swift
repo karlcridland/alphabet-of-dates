@@ -11,8 +11,6 @@ import UIKit
 
 class ActivityScreenView: ScreenView {
     
-    var buttons: [DateButton] = []
-    
     override init() {
         super.init()
     }

@@ -20,17 +20,42 @@ class MasterView: UIView {
     
     override func addSubview(_ view: UIView) {
         super.addSubview(view)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            view.topAnchor.constraint(equalTo: self.topAnchor),
-            view.leftAnchor.constraint(equalTo: self.leftAnchor),
-            view.rightAnchor.constraint(equalTo: self.rightAnchor),
-            view.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-        ])
+        view.wrapTo(view: self)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+}
+
+extension UIView {
+    
+    func wrapTo(view: UIView, maxWidth: CGFloat? = nil, addToSubview: Bool = false) {
+        if (addToSubview) {
+            view.addSubview(self)
+        }
+        self.translatesAutoresizingMaskIntoConstraints = false
+
+        var constraints: [NSLayoutConstraint] = [
+            self.leftAnchor.constraint(equalTo: view.leftAnchor),
+            self.topAnchor.constraint(equalTo: view.topAnchor),
+            self.heightAnchor.constraint(equalTo: view.heightAnchor),
+        ]
+        
+        let widthConstraint = self.widthAnchor.constraint(equalTo: view.widthAnchor)
+
+        if let maxWidth = maxWidth {
+            let maxWidthConstraint = self.widthAnchor.constraint(lessThanOrEqualToConstant: maxWidth)
+            maxWidthConstraint.priority = .required
+            widthConstraint.priority = .defaultHigh
+            constraints.append(contentsOf: [maxWidthConstraint])
+        } else {
+            widthConstraint.priority = .required
+        }
+        constraints.append(widthConstraint)
+
+        NSLayoutConstraint.activate(constraints)
     }
     
 }

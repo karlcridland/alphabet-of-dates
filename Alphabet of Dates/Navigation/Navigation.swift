@@ -12,6 +12,7 @@ class Navigation {
     let view: NavigationView = NavigationView()
     let master: MasterView = MasterView()
     let screens: NavigationScreens = NavigationScreens()
+    let menu: Menu = Menu()
     
     init() {
         DatabaseManager.shared.getID { id in
@@ -20,9 +21,11 @@ class Navigation {
                     self.master.addSubview(view)
                     view.display()
                 }
+                self.master.addSubview(self.menu.view)
             }
         }
         self.displayActivities()
+        self.view.menuButton.addTarget(self.menu, action: #selector(self.menu.toggle), for: .touchUpInside)
     }
     
     @objc func displayActivities() {
@@ -49,6 +52,7 @@ class ScreenView: UIScrollView {
         super.init(frame: .zero)
         self.showsVerticalScrollIndicator = false
         self.showsHorizontalScrollIndicator = false
+        self.clipsToBounds = false
     }
     
     required init?(coder: NSCoder) {

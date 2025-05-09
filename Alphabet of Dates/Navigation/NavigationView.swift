@@ -17,8 +17,8 @@ class NavigationView: UIView {
     
     init(_ top: CGFloat = 0) {
         super.init(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: top + self.height))
-        self.backgroundColor = .frostedWhite.withAlphaComponent(0.2)
-        self.blur.effect = UIBlurEffect(style: .systemUltraThinMaterial)
+        self.backgroundColor = .frostedWhite
+//        self.blur.effect = UIBlurEffect(style: .systemUltraThinMaterial)
         
         [self.blur, self.menuButton, self.titleLabel].forEach { view in
             self.addSubview(view)

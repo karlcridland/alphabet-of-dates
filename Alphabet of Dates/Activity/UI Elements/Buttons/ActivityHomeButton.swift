@@ -19,7 +19,7 @@ class ActivityHomeButton: ActivityButton {
             optionButton.delete.disable = true
             optionButton.favourite.disable = true
             optionButton.fullScreen.disable = true
-            optionButton.addImage.disable = false
+            optionButton.addImage.disable = !(self.activity?.canReveal ?? false)
             super.tapped()
         }
     }

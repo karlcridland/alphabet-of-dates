@@ -10,21 +10,21 @@ import FirebaseAuth
 
 class ViewController: ImageViewController {
     
-    let fullScreen: FullScreenView = FullScreenView()
-    let dateSetter: ActivitySetter = ActivitySetter()
+//    let fullScreen: FullScreenView = FullScreenView()
+//    let dateSetter: ActivitySetter = ActivitySetter()
     let navigation: Navigation = Navigation()
     
     let auth: Authentication = Authentication.shared
-    static let manager = DateButtonManager()
+//    static let manager = DateButtonManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        DateButtonManager.viewController = self
-        [self.navigation.master, self.navigation.view, self.fullScreen, self.auth.view].forEach { view in
+//        DateButtonManager.viewController = self
+        [self.navigation.master, self.navigation.view, self.auth.view].forEach { view in
             self.view.addSubview(view)
         }
         
-        self.dateSetter.settingsButton.isHidden = !self.masterUser
+//        self.dateSetter.settingsButton.isHidden = !self.masterUser
         
 //        do {
 //            try Auth.auth().signOut()
