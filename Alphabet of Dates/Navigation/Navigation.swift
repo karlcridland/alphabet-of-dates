@@ -52,7 +52,6 @@ class ScreenView: UIScrollView {
         super.init(frame: .zero)
         self.showsVerticalScrollIndicator = false
         self.showsHorizontalScrollIndicator = false
-        self.clipsToBounds = false
     }
     
     required init?(coder: NSCoder) {

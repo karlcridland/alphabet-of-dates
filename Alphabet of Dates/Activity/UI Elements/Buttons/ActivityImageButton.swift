@@ -26,7 +26,10 @@ class ActivityImageButton: ActivityButton {
     override func tapped() {
         if let optionButton = self.activity?.view.optionButton {
             optionButton.selected_image = self.id
-            optionButton.enableAll()
+            optionButton.addImage.disable = false
+            optionButton.fullScreen.disable = false
+            optionButton.favourite.disable = false
+            optionButton.delete.disable = !ImageManager.shared.isMyImage(id)
             super.tapped()
         }
     }

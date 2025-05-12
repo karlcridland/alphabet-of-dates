@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 import FirebaseStorage
 
 extension String {
@@ -22,7 +23,7 @@ extension String {
         guard let date = inputFormatter.date(from: self) else { return nil }
         let outputFormatter = DateFormatter()
         outputFormatter.dateFormat = "dd/MM/yyyy"
-        outputFormatter.dateFormat = "d MMMM yyyy"
+        outputFormatter.dateFormat = "d MMMM"
         let day = Calendar.current.component(.day, from: date)
         let suffix = daySuffix(for: day)
         return "\(day)\(suffix) \(outputFormatter.string(from: date).dropFirst(2))".replacingOccurrences(of: "202", with: "'2").replacingOccurrences(of: "  ", with: " ")
@@ -45,9 +46,13 @@ extension String {
         return "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(separator: "").map({$0.uppercased()})
     }
     
-    func downloadImage(id: String, character: String, _ onComplete: @escaping (UIImage) -> Void) {
+    func downloadImage(id: String, character: String, uid: String, _ onComplete: @escaping (UIImage) -> Void) {
         let path = "dates/\(id)/\(character)/\(self)"
         let storageRef = Storage.storage().reference().child(path)
+        if let image = ImageManager.shared.getImage(self) {
+            onComplete(image)
+            return
+        }
         storageRef.downloadURL { url, error in
             guard let url = url, error == nil else {
                 return
@@ -57,6 +62,7 @@ extension String {
                     return
                 }
                 DispatchQueue.main.async {
+                    ImageManager.shared.append(id: self, author: uid, image: image)
                     onComplete(image)
                 }
             }.resume()

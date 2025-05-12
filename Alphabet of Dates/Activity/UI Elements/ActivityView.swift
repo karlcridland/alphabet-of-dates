@@ -23,7 +23,7 @@ class ActivityView: UIView {
     
     init(_ position: Int) {
         let width: CGFloat = (UIScreen.main.bounds.width - (3 * self.margin)) / 2
-        let height: CGFloat = width * 1.15
+        let height: CGFloat = width * 1.2
         let x: CGFloat = CGFloat(position % 2) * (width + self.margin) + self.margin
         let y: CGFloat = CGFloat(position / 2) * (height + self.margin) + self.margin
         let size = CGSize(width: width, height: height)
@@ -35,11 +35,12 @@ class ActivityView: UIView {
             self.addSubview(view)
             view.frame = CGRect(origin: .zero, size: CGSize(width: width, height: height))
         }
-        self.label.frame.size.height = width
+        self.label.frame.size.height = width * 1.15
         self.style()
     }
     
     func style() {
+        self.label.textColor = .charcoal
         self.backgroundColor = .frostedWhite
         [self, self.scroll, self.optionButton].forEach { view in
             view.layer.cornerRadius = 24

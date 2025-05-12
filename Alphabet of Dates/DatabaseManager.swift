@@ -59,9 +59,9 @@ class DatabaseManager {
         }
     }
     
-    func remove(image button: ImageButton) {
+    func remove(image: String, id: String, character: String) {
         if let uid = Auth.auth().currentUser?.uid {
-            let path = "dates/\(button.data.id)/alphabet/\(button.data.character)/images/\(uid)/\(button.image_id)"
+            let path = "dates/\(id)/alphabet/\(character)/images/\(uid)/\(image)"
             self.ref.child(path).removeValue()
         }
     }

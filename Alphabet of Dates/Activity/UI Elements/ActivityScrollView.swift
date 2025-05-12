@@ -10,7 +10,10 @@ import UIKit
 
 class ActivityScrollView: UIScrollView {
     
+    let home: ActivityHomeButton
+    
     init(size: CGSize) {
+        self.home = ActivityHomeButton(size: size)
         super.init(frame: CGRect(origin: .zero, size: size))
         self.isPagingEnabled = true
         self.showsHorizontalScrollIndicator = false
@@ -18,13 +21,15 @@ class ActivityScrollView: UIScrollView {
     }
     
     func set(_ activity: Activity) {
+        self.home.activity = activity
+        self.home.label.text = activity.canReveal ? activity.title : ""
+        self.home.date.text = activity.date
+        self.home.dateWrapper.isHidden = activity.date == ""
         activity.getImages { images in
             self.removeAllSubiews()
-            let home = ActivityHomeButton(size: self.frame.size)
-            home.activity = activity
-            self.addSubview(home)
+            self.addSubview(self.home)
             images.enumerated().forEach { (i, image) in
-                if let id = activity.getImageRef(image) {
+                if let id = ImageManager.shared.getId(image) {
                     let imageView = ActivityImageButton(position: i + 1, size: self.frame.size, id: id, image: image)
                     imageView.activity = activity
                     self.addSubview(imageView)

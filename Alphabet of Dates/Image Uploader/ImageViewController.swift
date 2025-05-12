@@ -8,19 +8,19 @@
 import UIKit
 import PhotosUI
 import FirebaseStorage
+import FirebaseAuth
 
 class ImageViewController: UIViewController, PHPickerViewControllerDelegate {
     
-    var currentId, currentChar: String?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        ImageManager.shared.setViewController(self)
     }
     
     func showPhotoPicker() {
         var config = PHPickerConfiguration()
-        config.selectionLimit = 1 // Set to 0 for unlimited selection
-        config.filter = .images // Only show images
+        config.selectionLimit = 1
+        config.filter = .images
         
         let picker = PHPickerViewController(configuration: config)
         picker.delegate = self
@@ -37,12 +37,15 @@ class ImageViewController: UIViewController, PHPickerViewControllerDelegate {
         itemProvider.loadObject(ofClass: UIImage.self, completionHandler: { image, error in
             DispatchQueue.main.async {
                 if let selectedImage = image as? UIImage,
-                   let id = self.currentId,
-                   let char = self.currentChar {
+                   let id = ImageManager.shared.activity?.id,
+                   let char = ImageManager.shared.activity?.character {
+                    if let uid = Auth.auth().currentUser?.uid {
+                        ImageManager.shared.append(id: id, author: uid, image: selectedImage)
+                    }
                     let image_id: String = String.generateRandomString()
                     self.uploadImageToFirebase(image: selectedImage, path: "/dates/\(id)/\(char)/\(image_id)") { result in
                         DatabaseManager.shared.appendImage(id: id, char: char, image_id: image_id)
-                        print(result)
+                        ImageManager.shared.clear()
                     }
                 }
             }
@@ -50,22 +53,18 @@ class ImageViewController: UIViewController, PHPickerViewControllerDelegate {
     }
     
     func uploadImageToFirebase(image: UIImage, path: String, completion: @escaping (Result<URL, Error>) -> Void) {
-        let maxFileSize: Int = 100_000 // 200KB
-        let maxDimension: CGFloat = 200 // Further reduce size if needed
-
-        // Step 1: Resize image to smaller dimensions
+        let maxFileSize: Int = 100_000
+        let maxDimension: CGFloat = 200
         let resizedImage = image.resized(toMaxDimension: maxDimension)
-        
-        var compression: CGFloat = 0.8 // Start with some compression
+
+        var compression: CGFloat = 0.8
         var imageData = resizedImage.jpegData(compressionQuality: compression)
         
-        // Step 2: Reduce quality in finer steps (0.05) until it's under 200KB
         while let data = imageData, data.count > maxFileSize, compression > 0.1 {
             compression -= 0.05
             imageData = resizedImage.jpegData(compressionQuality: compression)
         }
 
-        // Step 3: Ensure final image data is within limits
         guard let finalImageData = imageData, finalImageData.count <= maxFileSize else {
             completion(.failure(NSError(domain: "ImageError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Image exceeds 200KB even after resizing and compression."])))
             return
@@ -80,8 +79,7 @@ class ImageViewController: UIViewController, PHPickerViewControllerDelegate {
                 completion(.failure(error))
                 return
             }
-
-            // Fetch the download URL
+            
             storageRef.downloadURL { url, error in
                 if let error = error {
                     completion(.failure(error))

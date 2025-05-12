@@ -6,21 +6,22 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 // Creates an instance of an activity.
 
 class Activity {
     
-    private let data: DateData
+    private var data: DateData
     
     let view: ActivityView
-    let id, character: String
+    let id, character, title, date: String
     let canReveal: Bool
-    
-    private var saved_images: [String: UIImage] = [:]
     
     init(_ data: DateData) {
         self.data = data
+        self.title = data.name
+        self.date = data.revealedOn.toDate ?? data.revealedOn
         self.id = data.id
         self.character = data.character
         self.canReveal = data.canReveal
@@ -29,42 +30,62 @@ class Activity {
         self.view.set(self)
     }
     
+    func update() {
+        self.view.scroll.set(self)
+    }
+    
+    func getAuthor(_ ref: String) -> String? {
+        var result: String?
+        self.data.images.forEach { (author, images) in
+            if (images.keys.contains(ref)) {
+                result = author
+            }
+        }
+        return result
+    }
+    
     func getImages(onComplete: @escaping ([UIImage]) -> Void) {
         self.data.images.sortImages().forEach { ref in
-            if (self.saved_images[ref] == nil) {
-                ref.downloadImage(id: self.id, character: self.character) { image in
-                    self.saved_images[ref] = image
-                    onComplete(self.images_sorted)
+            if (ImageManager.shared.getImage(ref) == nil) {
+                if let uid = getAuthor(ref) {
+                    ref.downloadImage(id: self.id, character: self.character, uid: uid) { image in
+                        onComplete(self.images_sorted)
+                    }
                 }
             }
         }
         onComplete(self.images_sorted)
     }
     
-    func getImageRef(_ image: UIImage) -> String? {
-        if let first = self.saved_images.first(where: {$0.value == image}) {
-            return first.key
-        }
-        return nil
-    }
-    
     private var images_sorted: [UIImage] {
         var results: [UIImage] = []
         self.data.images.sortImages(self.data.firstImage).forEach { ref in
-            if let image = self.saved_images[ref] {
+            if let image = ImageManager.shared.getImage(ref) {
                 results.append(image)
             }
         }
+        self.view.scroll.home.photoCount.update(quantity: results.count)
         return results
     }
     
     @objc func uploadPhotoClicked() {
+        ImageManager.shared.takePhoto(self)
     }
     
     @objc func fullscreenClicked() {
+        if let selected = self.view.optionButton.selected_image {
+            FullScreenManager.shared.set(self, ref: selected)
+        }
     }
     
     @objc func removeImageClicked() {
+        if let selected = self.view.optionButton.selected_image,
+           let uid = Auth.auth().currentUser?.uid,
+            let image_uid = ImageManager.shared.getAuthor(selected), uid == image_uid {
+            DatabaseManager.shared.remove(image: selected, id: self.id, character: self.character)
+            self.data.images[uid]?.removeValue(forKey: selected)
+            self.view.set(self)
+        }
     }
     
     @objc func favouriteImageClicked() {
