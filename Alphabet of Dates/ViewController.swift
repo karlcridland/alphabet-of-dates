@@ -19,15 +19,6 @@ class ViewController: ImageViewController {
         [self.navigation.master, self.navigation.view, self.auth.view, FullScreenManager.shared.view].forEach { view in
             self.view.addSubview(view)
         }
-        
-//        self.dateSetter.settingsButton.isHidden = !self.masterUser
-        
-//        do {
-//            try Auth.auth().signOut()
-//        }
-//        catch {
-//
-//        }
     }
 
     override func viewSafeAreaInsetsDidChange() {
