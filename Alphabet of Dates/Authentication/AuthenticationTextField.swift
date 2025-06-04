@@ -21,6 +21,8 @@ class AuthenticationTextField: UITextField {
         self.placeholder = type.rawValue
         self.setBack()
         self.textContentType = type
+        self.returnKeyType = .done
+        self.addTarget(self, action: #selector(self.resignFirstResponder), for: .touchUpInside)
     }
     
     var value: String {

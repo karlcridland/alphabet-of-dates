@@ -12,6 +12,7 @@ class AuthenticationView: UIView {
     var auth: Authentication?
     
     private let fields: AuthenticationFields = AuthenticationFields()
+    private let forgotten: AuthenticationChangeStateButton = AuthenticationChangeStateButton(state: .forgotPassword, text: "Forgotten password?")
     private let scroll: UIScrollView = UIScrollView()
     
     let submit: AuthenticationSubmitButton = AuthenticationSubmitButton()

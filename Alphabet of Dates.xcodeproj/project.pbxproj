@@ -178,6 +178,7 @@
 				DEVELOPMENT_TEAM = J3C436QQA9;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Alphabet of Dates/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "A to Z";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -208,6 +209,7 @@
 				DEVELOPMENT_TEAM = J3C436QQA9;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Alphabet of Dates/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "A to Z";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

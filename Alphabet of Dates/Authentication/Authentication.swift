@@ -11,18 +11,20 @@ import FirebaseMessaging
 class Authentication {
     
     static var state: AuthenticationState = .signIn
-    let view = AuthenticationView()
+    let view = AuthView()
     
     public static let shared: Authentication = Authentication()
     
     private init() {
         self.view.auth = self
         let _ = Auth.auth().addStateDidChangeListener { auth, user in
-            if Auth.auth().currentUser != nil {
+            if let user = Auth.auth().currentUser {
+                print(user.email ?? "")
                 self.view.isHidden = true
                 Authentication.state = .signedIn
             }
             else {
+                print("no user")
                 self.view.isHidden = false
                 Authentication.state = .signIn
             }
@@ -35,7 +37,6 @@ class Authentication {
                 print(error)
             }
             self.updateToken()
-            self.view.removeFromSuperview()
         }
     }
     
