@@ -18,6 +18,13 @@ class DatabaseManager {
         
     }
     
+    func set(name: Name, uid: String) {
+        self.ref.child("users/\(uid)/name").setValue([
+            "first": name.first,
+            "last": name.last
+        ])
+    }
+    
     func getData(for character: String, with id: String, onComplete: @escaping (DateData?) -> Void) {
         self.ref.child("dates/\(id)/alphabet/\(character.uppercased())").observe(.value) { snapshot in
             if let value = snapshot.value as? [String: Any] {

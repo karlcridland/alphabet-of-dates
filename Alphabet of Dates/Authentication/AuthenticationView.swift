@@ -34,7 +34,8 @@ class AuthenticationView: UIView {
     @objc func clicked() {
         switch (Authentication.state) {
         case .signIn:
-            self.auth?.signIn(email: fields.email.value, password: fields.password.value)
+            self.auth?.signIn(email: fields.email.value, password: fields.password.value) { _ in
+            }
             return
         case .signUp:
             return

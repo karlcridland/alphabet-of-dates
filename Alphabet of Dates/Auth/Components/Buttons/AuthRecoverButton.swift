@@ -1,16 +1,16 @@
 //
-//  AuthEmailField.swift
+//  AuthRecoverButton.swift
 //  Alphabet of Dates
 //
-//  Created by Karl Cridland on 04/06/2025.
+//  Created by Karl Cridland on 05/06/2025.
 //
 
 import UIKit
 
-class AuthEmailField: AuthTextField {
+class AuthRecoverButton: AuthTextButton {
     
     init() {
-        super.init("Email Address", .emailAddress)
+        super.init("forgotten password?")
     }
     
     required init?(coder: NSCoder) {

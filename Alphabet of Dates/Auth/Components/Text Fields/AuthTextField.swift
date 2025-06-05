@@ -15,10 +15,14 @@ class AuthTextField: UIButton, UITextFieldDelegate {
     
     private var active_height, inactive_height: NSLayoutConstraint?
     
+    var errorMessage: String?
+    
     var nextField: AuthTextField?
     
     init(_ placeholder: String, _ textContentType: UITextContentType = .emailAddress) {
         super.init(frame: .zero)
+        
+        let isPassword = textContentType == .password || textContentType == .newPassword
         
         self.backgroundColor = .frostedWhite
         self.clipsToBounds = false
@@ -27,7 +31,7 @@ class AuthTextField: UIButton, UITextFieldDelegate {
         self.layer.cornerRadius = 16
         self.layer.cornerCurve = .continuous
         self.layer.borderWidth = 2
-        self.layer.borderColor = UIColor.charcoal.cgColor
+        self.layer.borderColor = UIColor.permaCharcoal.cgColor
         
         self.placeholder.text = placeholder
         self.placeholder.isUserInteractionEnabled = false
@@ -37,8 +41,10 @@ class AuthTextField: UIButton, UITextFieldDelegate {
         self.textField.delegate = self
         self.textField.returnKeyType = .done
         self.textField.font = .systemFont(ofSize: 16, weight: .semibold)
-        self.textField.isSecureTextEntry = textContentType == .password || textContentType == .newPassword
+        self.textField.isSecureTextEntry = isPassword
         self.textField.addTarget(self, action: #selector(self.returnKeyPressed), for: .primaryActionTriggered)
+        
+        self.addTarget(self, action: #selector(self.becomeFirstResponder), for: .touchUpInside)
         
         self.fields.forEach { view in
             self.addSubview(view)
@@ -48,11 +54,25 @@ class AuthTextField: UIButton, UITextFieldDelegate {
         self.active_height = self.placeholder.heightAnchor.constraint(equalToConstant: 36)
         self.inactive_height = self.placeholder.heightAnchor.constraint(equalTo: self.heightAnchor)
         self.updatePlaceholder()
+        
+    }
+    
+    override func addTarget(_ target: Any?, action: Selector, for controlEvents: UIControl.Event) {
+        self.textField.addTarget(target, action: action, for: controlEvents)
+    }
+    
+    var isValid: Bool {
+        return !(self.textField.text?.isEmpty ?? true)
     }
     
     func set(next: AuthTextField) {
         self.nextField = next
         self.textField.returnKeyType = .next
+    }
+    
+    func set(value: String?) {
+        self.textField.text = value
+        self.updatePlaceholder()
     }
     
     @objc func returnKeyPressed() {
@@ -61,6 +81,7 @@ class AuthTextField: UIButton, UITextFieldDelegate {
         }
         else {
             let _ = self.resignFirstResponder()
+            self.resetScrollView()
         }
     }
     
@@ -79,6 +100,7 @@ class AuthTextField: UIButton, UITextFieldDelegate {
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
+        self.focusInScrollView()
         UIView.animate(withDuration: 0.5) {
 //            self.shadow(distance: 7)
 //            self.transform = CGAffineTransform(translationX: -1, y: -5)
@@ -116,8 +138,23 @@ class AuthTextField: UIButton, UITextFieldDelegate {
         return [self.textField, self.placeholder, self.icon]
     }
     
+    func scrollTo(_ y: CGFloat) {
+        UIView.animate(withDuration: 0.4) {
+            if let scroll = self.superview as? UIScrollView {
+                scroll.contentOffset.y = y
+            }
+        }
+    }
+    
+    func focusInScrollView() {
+        self.scrollTo(self.frame.minY - 100)
+    }
+    
+    func resetScrollView() {
+        self.scrollTo(0)
+    }
+    
     override func becomeFirstResponder() -> Bool {
-        print("becoming first responder for \(self.placeholder.text ?? "null")")
         return self.textField.becomeFirstResponder()
     }
     

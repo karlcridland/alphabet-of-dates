@@ -15,8 +15,6 @@ class AuthView: UIView {
     let signUp: SignUpAuthView = SignUpAuthView()
     let recover: RecoverAuthView = RecoverAuthView()
     
-    var auth: Authentication?
-    
     init() {
         super.init(frame: UIScreen.main.bounds)
         self.backgroundColor = .lilac
@@ -24,6 +22,12 @@ class AuthView: UIView {
             self.addSubview(view)
         }
         self.update()
+        
+        self.signIn.recovery.addTarget(self, action: #selector(self.openRecovery), for: .touchUpInside)
+        self.signIn.signUp.addTarget(self, action: #selector(self.openSignUp), for: .touchUpInside)
+        self.recover.back.addTarget(self, action: #selector(self.openSignIn), for: .touchUpInside)
+        self.signUp.back.addTarget(self, action: #selector(self.openSignIn), for: .touchUpInside)
+        
     }
     
     var all: [AuthSubview] {
@@ -33,7 +37,22 @@ class AuthView: UIView {
     func hideAll() {
         self.all.forEach { view in
             view.isHidden = true
+            view.scroll.contentOffset.y = 0
+            let _ = view.resignFirstResponder()
         }
+    }
+    
+    @objc func openSignIn() {
+        self.update()
+    }
+    
+    @objc func openSignUp() {
+        self.update(to: .signUp)
+    }
+    
+    @objc func openRecovery() {
+        self.recover.email.set(value: self.signIn.email.value)
+        self.update(to: .recover)
     }
     
     func update(to state: AuthState = .signIn) {
