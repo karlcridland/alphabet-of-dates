@@ -23,7 +23,6 @@ class AuthSubmitButton: UIButton {
         
         self.loading.translatesAutoresizingMaskIntoConstraints = false
         self.loading.isUserInteractionEnabled = false
-        self.loading.backgroundColor = self.backgroundColor
         self.loading.color = .frostedWhite
         self.loading.style = .medium
         self.loading.layer.cornerRadius = self.layer.cornerRadius

@@ -10,13 +10,12 @@ import FirebaseAuth
 
 class ViewController: ImageViewController {
     
-    
     let navigation: Navigation = Navigation()
     let auth: Authentication = Authentication.shared
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        [self.navigation.master, self.navigation.view, self.auth.view, FullScreenManager.shared.view].forEach { view in
+        [self.navigation.master, self.navigation.view, self.auth.view, self.navigation.intro.view, FullScreenManager.shared.view].forEach { view in
             self.view.addSubview(view)
         }
     }
@@ -29,6 +28,11 @@ class ViewController: ImageViewController {
             self.navigation.master.leftAnchor.constraint(equalTo: self.view.leftAnchor),
             self.navigation.master.rightAnchor.constraint(equalTo: self.view.rightAnchor),
             self.navigation.master.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -self.view.safeAreaInsets.bottom),
+            
+            self.navigation.intro.view.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.navigation.intro.view.leftAnchor.constraint(equalTo: self.view.leftAnchor),
+            self.navigation.intro.view.rightAnchor.constraint(equalTo: self.view.rightAnchor),
+            self.navigation.intro.view.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
         ])
     }
 

@@ -55,6 +55,12 @@ class AuthTextField: UIButton, UITextFieldDelegate {
         self.inactive_height = self.placeholder.heightAnchor.constraint(equalTo: self.heightAnchor)
         self.updatePlaceholder()
         
+        self.shadow(distance: 4)
+        
+    }
+    
+    func disableAutoFill() {
+        self.textField.disableAutoFill()
     }
     
     override func addTarget(_ target: Any?, action: Selector, for controlEvents: UIControl.Event) {

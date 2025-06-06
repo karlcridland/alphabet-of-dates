@@ -11,7 +11,7 @@ class AuthSubview: UIView, UIScrollViewDelegate {
     
     let type: AuthState
     
-    let scroll: UIScrollView = UIScrollView()
+    let scroll: AuthScrollView = AuthScrollView()
     
     let icon: AuthIconView = AuthIconView()
     let submit: AuthSubmitButton = AuthSubmitButton()
@@ -27,13 +27,22 @@ class AuthSubview: UIView, UIScrollViewDelegate {
         [self.scroll, self.submit, self.privacy].forEach { view in
             self.addSubview(view)
         }
-        self.scroll.addSubview(self.icon)
-        self.scroll.clipsToBounds = false
         self.scroll.delegate = self
-        self.scroll.translatesAutoresizingMaskIntoConstraints = false
-        self.scroll.isScrollEnabled = false
+        self.scroll.addSubview(self.icon)
         
         self.submit.addTarget(self, action: #selector(self.clicked), for: .touchUpInside)
+        self.submit.addTarget(self, action: #selector(self.resignFirstResponder), for: .touchDown)
+        
+        self.scroll.onTap = {
+            UIView.animate(withDuration: 0.2) {
+                self.scroll.contentOffset.y = 0
+            }
+            let _ = self.resignFirstResponder()
+        }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
     }
     
     override func safeAreaInsetsDidChange() {
@@ -138,6 +147,28 @@ class AuthSubview: UIView, UIScrollViewDelegate {
             let _ = field.resignFirstResponder()
         }
         return super.resignFirstResponder()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+}
+
+class AuthScrollView: UIScrollView {
+    
+    var onTap: (() -> Void)?
+    
+    init() {
+        super.init(frame: .zero)
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.clipsToBounds = false
+        self.isScrollEnabled = true
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        self.onTap?()
     }
     
     required init?(coder: NSCoder) {

@@ -37,14 +37,36 @@ class DatabaseManager {
         }
     }
     
-    func getID(_ onComplete: @escaping (String) -> Void) {
+    func getID(_ onComplete: @escaping (String?) -> Void) {
         if let uid = Auth.auth().currentUser?.uid {
             self.ref.child("users/\(uid)/date_id").observeSingleEvent(of: .value) { snapshot in
                 if let value = snapshot.value as? String {
                     onComplete(value)
                 }
+                else {
+                    onComplete(nil)
+                }
             }
         }
+    }
+    
+    func test() {
+        self.ref.child("dates/EBV8DL/alphabet/A/name").observeSingleEvent(of: .value) { snapshot in
+            if let name = snapshot.value as? String {
+                print(name)
+            }
+        }
+    }
+    
+    func createID(_ onComplete: @escaping (String) -> Void) {
+        let id = String.generateRandomString(length: 6)
+        self.ref.child("dates/\(id)/date_id").setValue(id) { error, ref in
+            onComplete(id)
+        }
+    }
+    
+    func getMainName(for id: String, _ onComplete: @escaping (String) -> Void) {
+        
     }
     
     func setActivity(char: String, id: String, name: String?, date: String?) {

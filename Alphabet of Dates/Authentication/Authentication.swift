@@ -13,17 +13,18 @@ class Authentication {
     static var state: AuthenticationState = .signIn
     let view = AuthView()
     
+    var onSignIn: (() -> Void)?
+    
     public static let shared: Authentication = Authentication()
     
     private init() {
         let _ = Auth.auth().addStateDidChangeListener { auth, user in
-            if let user = Auth.auth().currentUser {
-                print(user.email ?? "")
+            if let _ = Auth.auth().currentUser {
                 self.view.isHidden = true
                 Authentication.state = .signedIn
+                self.onSignIn?()
             }
             else {
-                print("no user")
                 self.view.isHidden = false
                 Authentication.state = .signIn
             }
@@ -45,7 +46,6 @@ class Authentication {
     }
     
     func signUp(email: String, password: String, name: Name, _ errorMessage: @escaping (String) -> Void) {
-        print("signing up ...")
         Auth.auth().createUser(withEmail: email, password: password) { result, error in
             print(result, error)
             if let error = error?.localizedDescription {
@@ -69,12 +69,25 @@ class Authentication {
         }
     }
     
+    func signOut() {
+        do {
+            try Auth.auth().signOut()
+        }
+        catch {
+            print("Error signing out.")
+        }
+    }
+    
     func updateToken() {
         Messaging.messaging().token { token, _ in
             if let token = token {
                 DatabaseManager.shared.set(token: token)
             }
         }
+    }
+    
+    var isSignedIn: Bool {
+        return Auth.auth().currentUser != nil
     }
     
 }

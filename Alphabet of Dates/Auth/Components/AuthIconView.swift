@@ -9,6 +9,8 @@ import UIKit
 
 class AuthIconView: UIImageView {
     
+    var onClick: (() -> Void)?
+    
     init() {
         super.init(frame: .zero)
         self.translatesAutoresizingMaskIntoConstraints = false
@@ -18,6 +20,11 @@ class AuthIconView: UIImageView {
             self.widthAnchor.constraint(equalToConstant: 140),
             self.heightAnchor.constraint(equalToConstant: 82)
         ])
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        self.onClick?()
     }
     
     required init?(coder: NSCoder) {

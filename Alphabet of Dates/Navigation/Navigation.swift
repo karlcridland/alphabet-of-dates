@@ -11,21 +11,36 @@ class Navigation {
     
     let view: NavigationView = NavigationView()
     let master: MasterView = MasterView()
+    let intro: Introduction = Introduction()
     let screens: NavigationScreens = NavigationScreens()
     let menu: Menu = Menu()
     
     init() {
-        DatabaseManager.shared.getID { id in
-            ActivityManager.getActivities(id) {
-                self.screens.all.forEach { view in
-                    self.master.addSubview(view)
-                    view.display()
+        Authentication.shared.onSignIn = self.loggedIn
+//        Authentication.shared.signOut()
+    }
+    
+    func loggedIn() {
+        if (Authentication.shared.isSignedIn) {
+            DatabaseManager.shared.getID { id in
+                DatabaseManager.shared.test()
+                if let id = id {
+                    ActivityManager.getActivities(id) {
+                        self.screens.all.forEach { view in
+                            self.master.addSubview(view)
+                            view.display()
+                        }
+                        self.master.addSubview(self.menu.view)
+                    }
+                    self.displayActivities()
+                    self.view.menuButton.addTarget(self.menu, action: #selector(self.menu.toggle), for: .touchUpInside)
+                    self.view.isHidden = false
                 }
-                self.master.addSubview(self.menu.view)
+                else {
+                    self.intro.view.isHidden = false
+                }
             }
         }
-        self.displayActivities()
-        self.view.menuButton.addTarget(self.menu, action: #selector(self.menu.toggle), for: .touchUpInside)
     }
     
     @objc func displayActivities() {

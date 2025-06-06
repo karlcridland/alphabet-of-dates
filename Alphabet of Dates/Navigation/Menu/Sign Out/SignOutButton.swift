@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import FirebaseAuth
 
 class SignOutButton: UIButton {
     
@@ -28,12 +27,7 @@ class SignOutButton: UIButton {
     }
     
     @objc func signOutClicked() {
-        do {
-            try Auth.auth().signOut()
-        }
-        catch {
-            print("Couldn't sign out.")
-        }
+        Authentication.shared.signOut()
     }
     
     required init?(coder: NSCoder) {

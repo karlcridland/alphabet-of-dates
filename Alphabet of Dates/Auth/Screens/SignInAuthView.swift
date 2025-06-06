@@ -19,6 +19,9 @@ class SignInAuthView: AuthSubview {
     init() {
         super.init(type: .signIn)
         self.placeToScroll([self.email, self.password, self.error, self.recovery, self.separator, self.signUpLabel, self.signUp])
+        self.password.disableAutoFill()
+//        self.email.set(value: "karlcridland@googlemail.com")
+//        self.password.set(value: "Johndorian1!")
     }
     
     override func clicked() {
