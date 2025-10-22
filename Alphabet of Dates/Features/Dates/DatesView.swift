@@ -10,31 +10,36 @@ import CoreData
 
 struct DatesView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @State private var showSettings: Bool = false
 
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \AlphaDate.value, ascending: true)],
-        animation: .default)
-    private var dates: FetchedResults<AlphaDate>
+//    @FetchRequest(
+//        sortDescriptors: [NSSortDescriptor(keyPath: \Activity.value, ascending: true)],
+//        animation: .default)
+//    private var dates: FetchedResults<Activity>
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
-                ForEach(dates) { date in
-                    if let value = date.value {
-                        NavigationLink {
-                            Text("Date: \(value)")
-                        } label: {
-                            Text("Date: \(value)")
-                        }
-                    }
-                }
+//                ForEach(dates) { date in
+//                    if let value = date.value {
+//                        NavigationLink {
+//                            Text("Date: \(value)")
+//                        } label: {
+//                            Text("Date: \(value)")
+//                        }
+//                    }
+//                }
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
+                    Button("Settings", systemImage: "gear") {
+                        showSettings = true
+                    }
                 }
             }
-            Text("Select an item")
+            .navigationDestination(isPresented: $showSettings) {
+                SettingsView()
+            }
         }
     }
 }
