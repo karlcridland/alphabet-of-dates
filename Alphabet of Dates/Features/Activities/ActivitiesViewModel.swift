@@ -17,10 +17,9 @@ class ActivitiesViewModel: ObservableObject {
         }
     }
     
-    func view(for character: Character) -> ActivityView {
+    func view(for character: Character) -> ActivityThumbnailView {
         let activity = activityManager?.get(character: character)
-        let view = ActivityView(character: character, activity: activity)
-        return view
+        return ActivityThumbnailView(character: character, activity: activity)
     }
     
 }

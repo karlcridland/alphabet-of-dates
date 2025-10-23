@@ -1,5 +1,5 @@
 //
-//  ActivityView.swift
+//  ActivityThumbnailView.swift
 //  Alphabet of Dates
 //
 //  Created by Karl Cridland on 23/10/2025.
@@ -8,7 +8,7 @@
 import SwiftUI
 import CoreData
 
-struct ActivityView: View {
+struct ActivityThumbnailView: View {
     
     let character: Character
     let activity: Activity?
