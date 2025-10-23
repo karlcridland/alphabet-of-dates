@@ -15,7 +15,7 @@ struct ActivitiesView: View {
     
     @ObservedObject var viewModel: ActivitiesViewModel
     
-    let margin: CGFloat = 16
+    let margin: CGFloat = 20
     
     init(id: String) {
         _viewModel = ObservedObject(initialValue: ActivitiesViewModel(id: id))
@@ -28,25 +28,29 @@ struct ActivitiesView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                LazyVGrid(columns: [GridItem(.flexible(), spacing: margin), GridItem(.flexible(), spacing: margin)], spacing: margin) {
-                    ForEach(Character.alphabet, id: \.self) { char in
-                        viewModel.view(for: char)
+            ZStack {
+                Color(.lilac)
+                    .ignoresSafeArea()
+                ScrollView {
+                    LazyVGrid(columns: [GridItem(.flexible(), spacing: margin), GridItem(.flexible(), spacing: margin)], spacing: margin) {
+                        ForEach(Character.alphabet, id: \.self) { char in
+                            viewModel.view(for: char)
+                        }
+                    }
+                    .frame(maxWidth: 400)
+                    .padding(margin)
+                }
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("Settings", systemImage: "gear") {
+                            showSettings = true
+                        }
                     }
                 }
-                .padding(margin)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Settings", systemImage: "gear") {
-                        showSettings = true
-                    }
+                .navigationDestination(isPresented: $showSettings) {
+                    SettingsView()
                 }
             }
-            .navigationDestination(isPresented: $showSettings) {
-                SettingsView()
-            }
-            .background(.red)
         }
     }
 }

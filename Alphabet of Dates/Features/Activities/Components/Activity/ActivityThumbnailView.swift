@@ -24,15 +24,19 @@ struct ActivityThumbnailView: View {
                 .fill(Color.white)
                 .overlay(
                     VStack {
+                        Spacer()
                         Text(character.uppercased())
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
+                            .font(.playfairDisplay(size: 72))
+                        Spacer()
+                        Text("test")
                     }
+                    .padding(20)
                 )
         }
         .frame(maxWidth: .infinity)
-        .aspectRatio(1.0/1.2, contentMode: .fit)
+        .aspectRatio(1.0/1.15, contentMode: .fit)
         .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
+        .shadow(color: .black.opacity(0.05), radius: 15)
     }
     
 }
