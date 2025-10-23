@@ -1,5 +1,5 @@
 //
-//  DatesView.swift
+//  ActivitiesView.swift
 //  Alphabet of Dates
 //
 //  Created by Karl Cridland on 21/10/2025.
@@ -8,9 +8,18 @@
 import SwiftUI
 import CoreData
 
-struct DatesView: View {
+struct ActivitiesView: View {
+    
     @Environment(\.managedObjectContext) private var viewContext
     @State private var showSettings: Bool = false
+    
+    @ObservedObject var viewModel: ActivitiesViewModel
+    
+    let margin: CGFloat = 16
+    
+    init(id: String) {
+        _viewModel = ObservedObject(initialValue: ActivitiesViewModel(id: id))
+    }
 
 //    @FetchRequest(
 //        sortDescriptors: [NSSortDescriptor(keyPath: \Activity.value, ascending: true)],
@@ -19,16 +28,13 @@ struct DatesView: View {
 
     var body: some View {
         NavigationStack {
-            List {
-//                ForEach(dates) { date in
-//                    if let value = date.value {
-//                        NavigationLink {
-//                            Text("Date: \(value)")
-//                        } label: {
-//                            Text("Date: \(value)")
-//                        }
-//                    }
-//                }
+            ScrollView {
+                LazyVGrid(columns: [GridItem(.flexible(), spacing: margin), GridItem(.flexible(), spacing: margin)], spacing: margin) {
+                    ForEach(Character.alphabet, id: \.self) { char in
+                        viewModel.view(for: char)
+                    }
+                }
+                .padding(margin)
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -40,10 +46,11 @@ struct DatesView: View {
             .navigationDestination(isPresented: $showSettings) {
                 SettingsView()
             }
+            .background(.red)
         }
     }
 }
 
 #Preview {
-    DatesView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    ActivitiesView(id: "ABC123").environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }

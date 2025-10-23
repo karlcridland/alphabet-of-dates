@@ -14,7 +14,7 @@ struct Alphabet_of_DatesApp: App {
 
     var body: some Scene {
         WindowGroup {
-            DatesView()
+            ActivitiesView(id: "ABC123")
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
