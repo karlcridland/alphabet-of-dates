@@ -13,30 +13,39 @@ struct ActivityThumbnailView: View {
     let character: Character
     let activity: Activity?
     
+    @State private var showActivityView: Bool = false
+    
     init(character: Character, activity: Activity? = nil) {
         self.character = character
         self.activity = activity
     }
     
     var body: some View {
-        ZStack {
+        Button {
+            showActivityView = true
+        } label: {
             Rectangle()
-                .fill(Color.white)
+                .fill(.frost)
                 .overlay(
                     VStack {
                         Spacer()
                         Text(character.uppercased())
                             .font(.playfairDisplay(size: 72))
                         Spacer()
-                        Text("test")
+                        Text("Test")
+                            .font(.lerckerliOne(size: 20))
                     }
                     .padding(20)
                 )
         }
+        .foregroundStyle(.charcoal)
         .frame(maxWidth: .infinity)
         .aspectRatio(1.0/1.15, contentMode: .fit)
         .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
         .shadow(color: .black.opacity(0.05), radius: 15)
+        .navigationDestination(isPresented: $showActivityView) {
+            ActivityView(character: character, activity: activity)
+        }
     }
     
 }
