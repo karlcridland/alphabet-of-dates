@@ -7,17 +7,25 @@
 
 import SwiftUI
 import CoreData
+import AuthenticationServices
 
 struct AuthenticationView: View {
+    
+    @ObservedObject var viewModel: AuthenticationViewModel
+    
+    init() {
+        _viewModel = ObservedObject(initialValue: AuthenticationViewModel())
+    }
+    
     var body: some View {
         VStack {
+            Color(.lilac).ignoresSafeArea()
             
-        }
-        .toolbar {
-            ToolbarItem(placement: .bottomBar) {
-                Text("Sign In")
-                #warning("TODO: Sign In button here")
-            }
+
+        SignInWithAppleButton(.signIn, onRequest: viewModel.configure, onCompletion: viewModel.handle)
+            .signInWithAppleButtonStyle(.black)
+            .frame(height: 50)
+            .padding(.horizontal)
         }
     }
 }

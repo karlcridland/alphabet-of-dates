@@ -25,7 +25,7 @@ class AuthManager: Authentication {
         #warning("TODO: Implement sign out feature")
     }
     
-    func update(name: String) throws {
+    func update(name: Name) throws {
         #warning("TODO: Implement name update feature")
     }
     

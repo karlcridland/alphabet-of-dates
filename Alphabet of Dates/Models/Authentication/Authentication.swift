@@ -12,6 +12,6 @@ protocol Authentication {
     
     func signIn() throws
     func signOut() throws
-    func update(name: String) throws
+    func update(name: Name) throws
     
 }
