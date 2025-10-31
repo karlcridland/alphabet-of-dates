@@ -12,6 +12,7 @@ struct ActivitiesView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @State private var showSettings: Bool = false
+    @State private var viewStyle: ActivityViewSelection = .letter
     
     @ObservedObject var viewModel: ActivitiesViewModel
     
@@ -34,13 +35,17 @@ struct ActivitiesView: View {
                 ScrollView {
                     LazyVGrid(columns: [GridItem(.flexible(), spacing: margin), GridItem(.flexible(), spacing: margin)], spacing: margin) {
                         ForEach(Character.alphabet, id: \.self) { char in
-                            viewModel.view(for: char)
+                            let activity = viewModel.get(for: char)
+                            ActivityThumbnailView(char, activity, $viewStyle)
                         }
                     }
                     .frame(maxWidth: 400)
                     .padding(margin)
                 }
                 .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        ActivityViewMenu($viewStyle)
+                    }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button("Settings", systemImage: "gear") {
                             showSettings = true
