@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseCore
 import CoreData
 import AuthenticationServices
 
@@ -13,25 +14,27 @@ struct AuthenticationView: View {
     
     @ObservedObject var viewModel: AuthenticationViewModel
     
-    init() {
-        _viewModel = ObservedObject(initialValue: AuthenticationViewModel())
+    init(DEBUG_MODE: Bool = false) {
+        _viewModel = ObservedObject(initialValue: AuthenticationViewModel(DEBUG_MODE: DEBUG_MODE))
     }
     
     var body: some View {
-        VStack {
+        ZStack {
             Color(.lilac).ignoresSafeArea()
-            
-
-        SignInWithAppleButton(.signIn, onRequest: viewModel.configure, onCompletion: viewModel.handle)
-            .signInWithAppleButtonStyle(.black)
-            .frame(height: 50)
-            .padding(.horizontal)
+            VStack {
+                Spacer()
+                SignInWithAppleButton(.signIn, onRequest: viewModel.configure, onCompletion: viewModel.handle)
+                    .signInWithAppleButtonStyle(.black)
+                    .frame(height: 50)
+                    .padding(.horizontal)
+            }
         }
     }
 }
 
 #Preview {
+    
     NavigationStack {
-        AuthenticationView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        AuthenticationView(DEBUG_MODE: true).environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }

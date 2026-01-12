@@ -16,10 +16,15 @@ class AuthenticationViewModel: NSObject, ObservableObject, ASAuthorizationContro
     @Published var isSignedIn = false
     fileprivate var currentNonce: String?
     
-    override init() {
+    private let DEBUG_MODE: Bool
+    
+    init(DEBUG_MODE: Bool = false) {
+        self.DEBUG_MODE = DEBUG_MODE
         super.init()
-        self.isSignedIn = Auth.auth().currentUser != nil
-        listenForAuthChanges()
+        if (!DEBUG_MODE) {
+            self.isSignedIn = Auth.auth().currentUser != nil
+            listenForAuthChanges()
+        }
     }
     
     private func listenForAuthChanges() {
